@@ -28,24 +28,35 @@ const Users = () => {
       {loading ? (
         <p className="text-gray-500">Loading...</p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white shadow rounded-lg overflow-hidden">
+        <div className="overflow-x-auto rounded-lg shadow">
+          <table className="min-w-full w-full bg-white rounded-lg overflow-hidden">
             <thead className="bg-gray-200 text-gray-700">
               <tr>
-                <th className="py-3 px-4 text-left">Name</th>
-                <th className="py-3 px-4 text-left">Email</th>
-                <th className="py-3 px-4 text-left">Last Login</th>
+                <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base whitespace-nowrap">Name</th>
+                <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base whitespace-nowrap">Email</th>
+                <th className="py-3 px-2 sm:px-4 text-left text-sm sm:text-base whitespace-nowrap">Last Login</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
                 <tr key={user._id} className="border-t hover:bg-gray-50">
-                  <td className="py-3 px-4">{user.username}</td>
-                  <td className="py-3 px-4">{user.email}</td>
-                  <td className="py-3 px-4">
-                    {user.lastLogin
-                      ? new Date(user.lastLogin).toLocaleString('en-GB')
-                      :<span className="text-red-500">N/A</span> }
+                  <td className="py-2 px-2 sm:px-4 text-sm sm:text-base">{user.username}</td>
+                  <td className="py-2 px-2 sm:px-4 text-sm sm:text-base break-all">{user.email}</td>
+                  <td className="py-2 px-2 sm:px-4 text-sm sm:text-base whitespace-nowrap">
+                    {user.lastLogin ? (
+                      new Date(user.lastLogin)
+                        .toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "2-digit",
+                          hour12: true,
+                        })
+                        .replace(",", "")
+                    ) : (
+                      <span className="text-red-500">N/A</span>
+                    )}
                   </td>
                 </tr>
               ))}

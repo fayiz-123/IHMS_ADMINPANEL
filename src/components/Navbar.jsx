@@ -11,7 +11,6 @@ const Navbar = () => {
       .get(`${baseApiUrl}/admin/me`, { withCredentials: true })
       .then((res) => {
         setAdminName(res.data.adminProfile);
-        console.log(res.data.adminProfile);
       })
       .catch((err) => {
         console.error("Error fetching adminName:", err);
@@ -19,26 +18,25 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-white shadow-md px-4 py-3 flex items-center justify-between w-full">
+    <nav className="bg-white shadow-md px-4 py-3 flex flex-wrap items-center justify-between w-full">
       {/* Left: Logo + Title */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
         <img
           src="images/IHMS.png"
           alt="IHMS Logo"
           className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-full"
         />
-        <span className="text-sm sm:text-xl font-semibold text-gray-800">
+        <span className="text-sm sm:text-xl font-semibold text-gray-800 whitespace-nowrap">
           IHMS Admin Panel
         </span>
       </div>
 
       {/* Right: Admin User Section */}
-      <div className="flex items-center gap-3">
-        {/* Always visible, smaller text on mobile */}
-        <span className="text-xs sm:text-sm text-gray-600">
+      <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-0 flex-shrink-0">
+        <span className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
           Welcome, {adminName?.name || "Admin"}
         </span>
-        <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-bold">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-bold">
           {adminName?.name ? adminName.name.charAt(0).toUpperCase() : "A"}
         </div>
       </div>
