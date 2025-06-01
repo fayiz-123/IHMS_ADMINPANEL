@@ -21,13 +21,16 @@ const Login = () => {
       );
 
       if (res.status === 200) {
-      navigate('/users')
+      console.log("Success storing");
       
+
       
+        // Optionally redirect to dashboard or users page
+        // navigate('/admin/users');
       }
     } catch (err) {
-      setError( 'Incorrect Email'||err.response?.data?.message );
-      console.log("Looged Failed");
+      setError(err.response?.data?.message || 'Login failed');
+      console.log("Logged Failed");
     }
   };
 
