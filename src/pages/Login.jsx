@@ -21,9 +21,7 @@ const Login = () => {
       );
 
       if (res.status === 200) {
-      console.log("Success storing");
-      
-
+      navigate('/users');
       
         // Optionally redirect to dashboard or users page
         // navigate('/admin/users');
