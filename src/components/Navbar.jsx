@@ -1,6 +1,23 @@
-import React from 'react';
+import React from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
+  const [adminName, setAdminName] = useState();
+  const baseApiUrl = import.meta.env.VITE_SERVER_API;
+
+  useEffect(() => {
+    axios
+      .get(`${baseApiUrl}/admin/me`, { withCredentials: true })
+      .then((res) => {
+        setAdminName(res.data.adminProfile);
+        console.log(res.data.adminProfile);
+      })
+      .catch((err) => {
+        console.error("Error fetching adminName:", err);
+      });
+  }, []);
+
   return (
     <nav className="bg-white shadow-md px-4 py-3 flex items-center justify-between w-full">
       {/* Left: Logo + Title */}
@@ -19,10 +36,10 @@ const Navbar = () => {
       <div className="flex items-center gap-3">
         {/* Always visible, smaller text on mobile */}
         <span className="text-xs sm:text-sm text-gray-600">
-          Welcome, Admin
+          Welcome, {adminName?.name || "Admin"}
         </span>
         <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-bold">
-          A
+          {adminName?.name ? adminName.name.charAt(0).toUpperCase() : "A"}
         </div>
       </div>
     </nav>
