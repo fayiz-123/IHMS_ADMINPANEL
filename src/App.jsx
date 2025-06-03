@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Users from "./pages/Users";
 import Login from "./pages/Login";
+import Bookings from "./pages/Bookings";
 
 function App() {
   const location = useLocation();
@@ -19,6 +20,7 @@ function App() {
         <main className="flex-1 overflow-y-auto p-4">
           <Routes>
             <Route path="/users" element={<Users />} />
+             <Route path="/bookings" element={<Bookings />} />
             {/* other routes */}
           </Routes>
         </main>

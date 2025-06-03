@@ -73,7 +73,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/admin/bookings"
+          to="/bookings"
           className={({ isActive }) =>
             `flex items-center gap-3 px-2 py-2 rounded-md text-gray-700 hover:bg-gray-100 w-full ${
               isActive ? "bg-gray-200 font-semibold" : ""
