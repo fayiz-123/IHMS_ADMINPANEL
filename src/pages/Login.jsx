@@ -17,7 +17,7 @@ const Login = () => {
       const res = await axios.post(
         `${baseApiUrl}/admin/adminLogin`,
         { email, password },
-        { withCredentials: true }
+        
       );
 
       if (res.status === 200) {
