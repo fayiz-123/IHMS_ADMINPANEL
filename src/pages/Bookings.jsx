@@ -60,12 +60,13 @@ const Bookings = () => {
     }
   };
 
- 
-  const filterBookings = bookings.filter((booking) =>
-    booking.name?.toLowerCase().includes(searchQurey.toLowerCase()) ||
-    booking.email?.toLowerCase().includes(searchQurey.toLowerCase()) ||
-    booking.userId?.toLowerCase().includes(searchQurey.toLowerCase()) ||
-    booking._id?.toLowerCase().includes(searchQurey.toLowerCase())
+  const filterBookings = bookings.filter(
+    (booking) =>
+      booking.name?.toLowerCase().includes(searchQurey.toLowerCase()) ||
+      booking.email?.toLowerCase().includes(searchQurey.toLowerCase()) ||
+      booking.service?.toLowerCase().includes(searchQurey.toLowerCase()) ||
+      booking.userId?.toLowerCase().includes(searchQurey.toLowerCase()) ||
+      booking._id?.toLowerCase().includes(searchQurey.toLowerCase())
   );
 
   return (
@@ -75,14 +76,20 @@ const Bookings = () => {
           {selectedUser ? "User's Bookings" : "Recent Bookings"}
         </h1>
 
-        <div className="mb-4">
+        <div className="mb-4 flex items-center space-x-2 sm:max-w-sm">
           <input
             type="text"
             value={searchQurey}
             onChange={(e) => setSeacrhQuery(e.target.value)}
-            placeholder="Search by Name, Email, User ID or Booking ID"
-            className="w-full sm:max-w-sm px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Search by Name, Email, User ID, Booking ID or Service"
+            className="flex-grow px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <button
+            onClick={() => setSeacrhQuery("")}
+            className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+          >
+            Clear
+          </button>
         </div>
 
         <div className="flex space-x-2">
@@ -143,17 +150,34 @@ const Bookings = () => {
                   </td>
                   <td className="py-2 px-4 capitalize">{booking.service}</td>
                   <td className="py-2 px-4 whitespace-nowrap">
-                    {booking.createdAt
-                      ? new Date(booking.createdAt).toLocaleString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "2-digit",
-                          hour12: true,
-                        })
-                      : "N/A"}
+                    {booking.createdAt ? (
+                      <div className="inline-block text-left">
+                        <div>
+                          {new Date(booking.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </div>
+                        <div className="text-center text-gray-600">
+                          {new Date(booking.createdAt).toLocaleTimeString(
+                            "en-US",
+                            {
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true,
+                            }
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      "N/A"
+                    )}
                   </td>
+
                   <td className="py-2 px-4">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
