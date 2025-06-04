@@ -5,6 +5,7 @@ const Bookings = () => {
   const [bookings, setBookings] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQurey, setSeacrhQuery] = useState("");
   const [showUserModal, setShowUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const baseApiUrl = import.meta.env.VITE_SERVER_API;
@@ -59,12 +60,30 @@ const Bookings = () => {
     }
   };
 
+ 
+  const filterBookings = bookings.filter((booking) =>
+    booking.name?.toLowerCase().includes(searchQurey.toLowerCase()) ||
+    booking.email?.toLowerCase().includes(searchQurey.toLowerCase()) ||
+    booking.userId?.toLowerCase().includes(searchQurey.toLowerCase()) ||
+    booking._id?.toLowerCase().includes(searchQurey.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-8 relative">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl sm:text-2xl font-semibold">
           {selectedUser ? "User's Bookings" : "Recent Bookings"}
         </h1>
+
+        <div className="mb-4">
+          <input
+            type="text"
+            value={searchQurey}
+            onChange={(e) => setSeacrhQuery(e.target.value)}
+            placeholder="Search by Name, Email, User ID or Booking ID"
+            className="w-full sm:max-w-sm px-3 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
         <div className="flex space-x-2">
           {selectedUser && (
@@ -94,6 +113,8 @@ const Bookings = () => {
         <p className="text-gray-500">Loading...</p>
       ) : bookings.length === 0 ? (
         <p className="text-gray-500">No bookings found.</p>
+      ) : filterBookings.length === 0 ? (
+        <p className="text-gray-500">No bookings match your search.</p>
       ) : (
         <div className="overflow-x-auto rounded-lg shadow">
           <table className="min-w-full w-full bg-white rounded-lg overflow-hidden">
@@ -101,7 +122,9 @@ const Bookings = () => {
               <tr>
                 <th className="py-3 px-4 text-left">Sl.No</th>
                 <th className="py-3 px-4 text-left">Name</th>
-                <th className="py-3 px-4 text-left">User ID & Email ID</th>{" "}
+                <th className="py-3 px-4 text-left">
+                  User ID,Email ID <br /> & Service ID
+                </th>
                 <th className="py-3 px-4 text-left">Service</th>
                 <th className="py-3 px-4 text-left">Date</th>
                 <th className="py-3 px-4 text-left">Status</th>
@@ -109,13 +132,14 @@ const Bookings = () => {
             </thead>
 
             <tbody>
-              {bookings.map((booking, index) => (
+              {filterBookings.map((booking, index) => (
                 <tr key={booking._id} className="border-t hover:bg-gray-50">
                   <td className="py-2 px-4">{index + 1}</td>
                   <td className="py-2 px-4">{booking.name}</td>
                   <td className="py-2 px-4 text-xs text-gray-600">
-                    {booking.userId},<br />
-                    {booking.email}
+                    User_ID :- {booking.userId},<br />
+                    email:- {booking.email},<br />
+                    Booking_ID :- {booking._id}
                   </td>
                   <td className="py-2 px-4 capitalize">{booking.service}</td>
                   <td className="py-2 px-4 whitespace-nowrap">
