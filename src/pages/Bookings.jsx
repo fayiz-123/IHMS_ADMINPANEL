@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Bookings = () => {
@@ -8,6 +9,7 @@ const Bookings = () => {
   const [searchQurey, setSeacrhQuery] = useState("");
   const [showUserModal, setShowUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const navigate = useNavigate();
   const baseApiUrl = import.meta.env.VITE_SERVER_API;
 
   // Initial fetch
@@ -24,7 +26,12 @@ const Bookings = () => {
       setBookings(res.data.allBookings);
       setLoading(false);
     } catch (err) {
-      console.error("Error fetching bookings:", err);
+      if (err.response?.status === 403) {
+        alert("Session expired. Please log in again.");
+        navigate("/"); // or use navigate() if using react-router
+      } else {
+        console.error("Error fetching Bookings:", err);
+      }
       setLoading(false);
     }
   };

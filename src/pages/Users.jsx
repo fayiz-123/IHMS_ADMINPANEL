@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQurey, setSeacrhQuery] = useState("");
+  const navigate = useNavigate();
   const baseApiUrl = import.meta.env.VITE_SERVER_API;
 
   useEffect(() => {
@@ -15,7 +17,12 @@ const Users = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching users:", err);
+        if (err.response?.status === 403) {
+          alert("Session expired. Please log in again.");
+          navigate("/"); // or use navigate() if using react-router
+        } else {
+          console.error("Error fetching users:", err);
+        }
         setLoading(false);
       });
   }, []);
@@ -77,7 +84,11 @@ const Users = () => {
             </thead>
             <tbody>
               {filterUsers.map((user, index) => (
-                <tr key={user._id} className="border-t hover:bg-gray-50">
+                <tr
+                  key={user._id}
+                  className="border-t hover:bg-gray-50 cursor-pointer"
+                  onClick={()=>navigate(`/user/${user._id}`)}
+                >
                   <td className="py-2 px-2 sm:px-4 text-sm sm:text-base">
                     {index + 1}
                   </td>

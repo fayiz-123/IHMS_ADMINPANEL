@@ -4,6 +4,8 @@ import Sidebar from "./components/Sidebar";
 import Users from "./pages/Users";
 import Login from "./pages/Login";
 import Bookings from "./pages/Bookings";
+import UserDetails from "./pages/userDetails";
+
 
 function App() {
   const location = useLocation();
@@ -21,6 +23,8 @@ function App() {
           <Routes>
             <Route path="/users" element={<Users />} />
              <Route path="/bookings" element={<Bookings />} />
+             <Route path="/user/:userId" element={<UserDetails />} />
+             
             {/* other routes */}
           </Routes>
         </main>
