@@ -25,8 +25,6 @@ const Login = () => {
       if (res.status === 200) {
         navigate("/users");
 
-        // Optionally redirect to dashboard or users page
-        // navigate('/admin/users');
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
