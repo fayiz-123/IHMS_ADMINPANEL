@@ -9,6 +9,9 @@ const Bookings = () => {
   const [searchQurey, setSeacrhQuery] = useState("");
   const [showUserModal, setShowUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [selectedBookingForStatus, setSelectedBookingForStatus] = useState(null);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
   const navigate = useNavigate();
   const baseApiUrl = import.meta.env.VITE_SERVER_API;
 
@@ -64,6 +67,37 @@ const Bookings = () => {
     } catch (err) {
       console.error("Error fetching user bookings:", err);
       setLoading(false);
+    }
+  };
+
+  const updateServiceStatus = async (serviceId, newStatus) => {
+    if (newStatus === "Booked") {
+      alert("Cannot set status to 'Booked'");
+      return;
+    }
+    
+    try {
+      setUpdatingStatus(true);
+      const res = await axios.put(
+        `${baseApiUrl}/admin/updateService/${serviceId}`,
+        { status: newStatus },
+        { withCredentials: true }
+      );
+
+      if (res.data.success) {
+        // Update local state
+        setBookings(prev => prev.map(booking => 
+          booking._id === serviceId ? { ...booking, status: newStatus } : booking
+        ));
+        setShowStatusModal(false);
+        setSelectedBookingForStatus(null);
+        alert("Status updated successfully");
+      }
+    } catch (err) {
+      console.error("Error updating status:", err);
+      alert(err.response?.data?.message || "Failed to update status");
+    } finally {
+      setUpdatingStatus(false);
     }
   };
 
@@ -142,6 +176,7 @@ const Bookings = () => {
                 <th className="py-3 px-4 text-left">Service</th>
                 <th className="py-3 px-4 text-left">Date</th>
                 <th className="py-3 px-4 text-left">Status</th>
+                <th className="py-3 px-4 text-left">Actions</th>
               </tr>
             </thead>
 
@@ -190,15 +225,26 @@ const Bookings = () => {
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         booking.status === "Completed"
                           ? "bg-green-100 text-green-700"
-                          : booking.status === "Booked"
+                          : booking.status === "Booked" || booking.status === "booked"
                           ? "bg-blue-100 text-blue-700"
                           : booking.status === "Confirmed"
                           ? "bg-yellow-200 text-yellow-800"
                           : "bg-red-100 text-red-700"
                       }`}
                     >
-                      {booking.status}
+                      {booking.status === "booked" ? "Booked" : booking.status}
                     </span>
+                  </td>
+                  <td className="py-2 px-4">
+                    <button
+                      onClick={() => {
+                        setSelectedBookingForStatus(booking);
+                        setShowStatusModal(true);
+                      }}
+                       className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors"
+                    >
+                      Update
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -232,6 +278,49 @@ const Bookings = () => {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+      )}
+
+      {/* STATUS UPDATE MODAL */}
+      {showStatusModal && selectedBookingForStatus && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-md p-6 w-full max-w-sm shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Update Status</h2>
+            <p className="mb-4 text-sm text-gray-600">
+              Current Status: <span className="font-medium">{selectedBookingForStatus.status}</span>
+            </p>
+            
+            <div className="flex flex-col gap-2 mb-6">
+              {['Confirmed', 'Completed', 'Cancelled'].map((status) => (
+                 <button
+                 key={status}
+                 onClick={() => updateServiceStatus(selectedBookingForStatus._id, status)}
+                 disabled={updatingStatus}
+                   className={`px-4 py-2 rounded text-sm font-medium transition-colors
+                     ${selectedBookingForStatus.status === status 
+                       ? 'bg-blue-100 text-blue-800 border border-blue-200' 
+                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                     }
+                   `}
+                 >
+                   {status}
+                 </button>
+              ))}
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={() => {
+                  setShowStatusModal(false);
+                  setSelectedBookingForStatus(null);
+                }}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm"
+                disabled={updatingStatus}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
