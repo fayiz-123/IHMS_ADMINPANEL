@@ -24,7 +24,7 @@ function App() {
         <Sidebar />
         <main className="flex-1 overflow-y-auto p-4">
           <Routes>
-            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/users" element={<Users />} />
              <Route path="/bookings" element={<Bookings />} />
              <Route path="/user/:userId" element={<UserDetails />} />
