@@ -23,7 +23,7 @@ const Login = () => {
       );
 
       if (res.status === 200) {
-        navigate("/users");
+        navigate("/dashboard");
 
       }
     } catch (err) {
