@@ -22,7 +22,7 @@ const Navbar = () => {
       {/* Left: Logo + Title */}
       <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
         <img
-          src="images/IHMS.png"
+          src="/images/IHMS.png"
           alt="IHMS Logo"
           className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-full"
         />
